@@ -27,11 +27,11 @@ public class EmployeeTestRunner extends Setup {
         String adminPass="admin123";
         loginPage.doLogin(adminUser,adminPass);
     }
-    @Test(priority = 1, description = "Check if user exists")
+    @Test(priority = 1, description = "Check if user exists", enabled = false)
     public void checkIfUserExists() throws IOException, ParseException {
         EmployeePage employeePage=new EmployeePage(driver);
-        employeePage.btnAddEmployee.get(2).click();
-        employeePage.toggleButton.click();
+//        employeePage.btnAddEmployee.get(2).click();
+//        employeePage.toggleButton.click();
         List data= Utils.readJSONArray("./src/test/resources/Users.json");
         JSONObject userObj= (JSONObject) data.get(data.size()-1);
         String exsistingUserName= (String) userObj.get("userName");
@@ -42,8 +42,10 @@ public class EmployeeTestRunner extends Setup {
 
     }
     @Test(priority = 2, description = "Create new employee")
-    public void createEmployee() throws IOException, ParseException {
+    public void createEmployee() throws IOException, ParseException, InterruptedException {
         EmployeePage employeePage=new EmployeePage(driver);
+        employeePage.btnAddEmployee.get(2).click();
+        employeePage.toggleButton.click();
         Utils utils=new Utils();
         utils.geneateRandomData();
         String firstName=utils.getFirstname();
@@ -55,6 +57,7 @@ public class EmployeeTestRunner extends Setup {
         employeePage.txtUserCreds.get(5).clear();
         employeePage.createEmployee(firstName,lastName,userName,password,confirmPassword);
 
+        Thread.sleep(5000);
         List<WebElement> headerTitle= driver.findElements(By.className("orangehrm-main-title"));
         Assert.assertTrue(headerTitle.get(0).isDisplayed());
 
