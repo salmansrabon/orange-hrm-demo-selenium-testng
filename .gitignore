@@ -2,3 +2,6 @@
 .idea
 build
 gradle
+allure-results
+allure-report
+src/test/resources/screenshots

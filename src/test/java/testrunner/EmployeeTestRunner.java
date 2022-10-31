@@ -50,8 +50,9 @@ public class EmployeeTestRunner extends Setup {
         utils.geneateRandomData();
         String firstName=utils.getFirstname();
         String lastName=utils.getLastname();
-        int randomId= Utils.generateRandomNumber(1000,9999);
-        String userName= utils.getFirstname()+randomId;
+        String userName=utils.getUsername();
+        //int randomId= Utils.generateRandomNumber(1000,9999);
+        //String userName= utils.getFirstname()+randomId;
         String password="P@ssword123";
         String confirmPassword=password;
         employeePage.txtUserCreds.get(5).clear();

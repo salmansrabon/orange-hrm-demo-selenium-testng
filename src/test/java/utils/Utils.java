@@ -1,24 +1,25 @@
 package utils;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.github.javafaker.Faker;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 
+@Getter
+@Setter
 public class Utils {
     public static void doScroll(WebDriver driver){
         JavascriptExecutor js= (JavascriptExecutor) driver;
@@ -30,28 +31,15 @@ public class Utils {
     }
     private String firstname;
     private String lastname;
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+    private String username;
 
     public void geneateRandomData(){
         Faker faker=new Faker();
         setFirstname(faker.name().firstName());
         setLastname(faker.name().lastName());
+        setUsername(faker.name().username());
     }
+
     public void saveJsonList(String username, String password) throws IOException, ParseException {
         String fileName="./src/test/resources/Users.json";
         JSONParser parser=new JSONParser();
@@ -84,9 +72,16 @@ public class Utils {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
-        List data= Utils.readJSONArray("./src/test/resources/Users.json");
-        JSONObject obj= (JSONObject) data.get(1);
-        System.out.println(obj.get("userName"));
+        Utils utils=new Utils();
+        utils.geneateRandomData();
+        System.out.println(utils.getFirstname());
+    }
+    public void takeScreenShot(WebDriver driver) throws IOException {
+        File screenshotFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        String time = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss-aa").format(new Date());
+        String fileWithPath = "./src/test/resources/screenshots/" + time + ".png";
+        File DestFile = new File(fileWithPath);
+        FileUtils.copyFile(screenshotFile, DestFile);
     }
 
 }
