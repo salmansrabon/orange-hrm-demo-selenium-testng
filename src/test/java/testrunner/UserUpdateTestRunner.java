@@ -80,4 +80,3 @@ public class UserUpdateTestRunner extends Setup {
         driver.findElement(By.partialLinkText("Logout")).click();
     }
 }
-//update

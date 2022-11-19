@@ -34,7 +34,7 @@ public class Setup {
         }
 
     }
-    @AfterTest
+    //@AfterTest
     public void quitBrowser(){
         try{
             driver.close();

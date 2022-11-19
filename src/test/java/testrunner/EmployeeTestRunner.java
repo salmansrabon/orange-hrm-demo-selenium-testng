@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -14,6 +15,10 @@ import pages.LoginPage;
 import setup.Setup;
 import utils.Utils;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
@@ -40,19 +45,26 @@ public class EmployeeTestRunner extends Setup {
 
         Assert.assertTrue(validationMessageActual.contains(validationMessageExpected));
 
+
     }
+
     @Test(priority = 2, description = "Create new employee")
-    public void createEmployee() throws IOException, ParseException, InterruptedException {
+    public void createEmployee() throws IOException, ParseException, InterruptedException, UnsupportedFlavorException {
         EmployeePage employeePage=new EmployeePage(driver);
+        driver.findElement(By.partialLinkText("PIM")).click();
         employeePage.btnAddEmployee.get(2).click();
+        Thread.sleep(5000);
+
+        List<WebElement> elements= driver.findElements(By.className("oxd-input"));
+        elements.get(4).sendKeys(Keys.CONTROL+"a");
+        elements.get(4).sendKeys(Keys.CONTROL+"c");
         employeePage.toggleButton.click();
         Utils utils=new Utils();
         utils.geneateRandomData();
         String firstName=utils.getFirstname();
         String lastName=utils.getLastname();
+        String id= Utils.pasteValue();
         String userName=utils.getUsername();
-        //int randomId= Utils.generateRandomNumber(1000,9999);
-        //String userName= utils.getFirstname()+randomId;
         String password="P@ssword123";
         String confirmPassword=password;
         employeePage.txtUserCreds.get(5).clear();
@@ -64,8 +76,9 @@ public class EmployeeTestRunner extends Setup {
 
         Utils.waitForElement(driver,headerTitle.get(0),50);
         if(headerTitle.get(0).isDisplayed()){
-            utils.saveJsonList(userName,password);
+            utils.saveJsonList(id, userName,password);
         }
+
 
     }
 }
